@@ -15,6 +15,8 @@
 <meta property="og:locale" content="fr_FR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://omtira.github.io/og.png">
+<link rel="canonical" href="https://omtira.github.io/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Othmen MTIRA","jobTitle":"Consultant Technique Microsoft Dynamics 365 CE & Power Platform","url":"https://omtira.github.io/","image":"https://omtira.github.io/og.png","worksFor":{"@type":"Organization","name":"Javista"},"address":{"@type":"PostalAddress","addressLocality":"Paris","addressCountry":"FR"},"alumniOf":[{"@type":"CollegeOrUniversity","name":"ESPRIT – École Supérieure Privée d'Ingénierie et de Technologies"},{"@type":"CollegeOrUniversity","name":"Institut Supérieur d'Informatique"}],"knowsAbout":["Microsoft Dynamics 365 CE","Power Platform","Dataverse","Power Apps","Power Automate","Copilot Studio","C#","JavaScript","Azure","CRM"],"knowsLanguage":["fr","ar","en"],"sameAs":["https://www.linkedin.com/in/othmen-mtira","https://github.com/Omtira"]}</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%231a0f1f%22/%3E%3Ctext%20x%3D%228%22%20y%3D%2243%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-weight%3D%22700%22%20font-size%3D%2230%22%20fill%3D%22%23fff%22%3EOM%3C/text%3E%3Ccircle%20cx%3D%2256%22%20cy%3D%2240%22%20r%3D%224%22%20fill%3D%22%23ff8fa3%22/%3E%3C/svg%3E">
 <script>try{var m=localStorage.getItem('om-mode');if(m)document.documentElement.dataset.mode=m;var l=localStorage.getItem('om-lang');if(l)document.documentElement.dataset.lang=l}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -153,6 +155,16 @@ footer{padding:24px max(5vw,16px);border-top:1px solid var(--line);color:var(--m
 .top.show{opacity:1;pointer-events:auto}
 .top:hover{transform:translateY(-3px);border-color:var(--rose)}
 @media(prefers-reduced-motion:reduce){.js .reveal,.js .proj .bub,.js .proj .row,.js .proj pre{opacity:1;transform:none;transition:none}.portrait::after,.caret,.tag i{animation:none}.glow{display:none}}
+.band.rule{border-top:1px solid var(--line)}
+.tips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.tip{background:var(--card);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px;transition:transform .25s ease}
+.tip:hover{transform:translateY(-4px)}
+.tip p{color:var(--soft);font-size:15px}
+.tip .code{position:relative;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px 14px 14px;margin-top:auto}
+.tip .code pre{color:var(--ink);padding-right:76px}
+.copy{position:absolute;top:8px;right:8px;min-height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--soft);font:600 13px Inter,sans-serif;cursor:pointer}
+.copy:hover{border-color:var(--rose);color:var(--ink)}
+@media(max-width:720px){.tips{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:960px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.projects,.stack{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:720px){.herogrid,.two,.contact{grid-template-columns:minmax(0,1fr)}.portrait{min-height:380px}.job{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:600px){.steps,.projects,.stack{grid-template-columns:minmax(0,1fr)}.links{display:none}}
@@ -162,7 +174,7 @@ footer{padding:24px max(5vw,16px);border-top:1px solid var(--line);color:var(--m
 <body>
 <div class="bar" id="bar"></div>
 <nav><div class="wrap"><a class="logo" href="#top">OM<b>.</b></a><div class="links">
-<a href="#apropos" data-en="About">À propos</a><a href="#methode" data-en="Method">Méthode</a><a href="#parcours" data-en="Experience">Parcours</a><a href="#projets" data-en="Projects">Projets</a><a href="#stack" data-en="Stack">Stack</a><a href="#certifications" data-en="Certifications">Certifications</a><a href="#contact" data-en="Contact">Contact</a></div>
+<a href="#apropos" data-en="About">À propos</a><a href="#methode" data-en="Method">Méthode</a><a href="#parcours" data-en="Experience">Parcours</a><a href="#projets" data-en="Projects">Projets</a><a href="#astuces" data-en="Tips">Astuces</a><a href="#stack" data-en="Stack">Stack</a><a href="#certifications" data-en="Certifications">Certifications</a><a href="#contact" data-en="Contact">Contact</a></div>
 <div class="tools"><button class="tg" id="langBtn" type="button" aria-label="Switch to English">EN</button><button class="tg" id="modeBtn" type="button" aria-label="Passer en mode clair"><svg id="modeIco" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"></svg></button></div></div></nav>
 
 <header class="band hero" id="top"><div class="glow" id="glow"></div><div class="wrap">
@@ -240,12 +252,18 @@ footer{padding:24px max(5vw,16px);border-top:1px solid var(--line);color:var(--m
 <p style="margin-top:14px;font-size:14px;color:var(--mute)" data-en="The screens above are illustrative previews with sample data.">Les écrans ci-dessus sont des aperçus illustratifs, avec des données d'exemple.</p>
 </div></section>
 
-<section class="band" id="stack"><div class="wrap">
+<section class="band rule" id="astuces"><div class="wrap">
+<h2 class="reveal" data-en="Power Platform tips">Astuces Power Platform</h2>
+<p class="lead reveal" style="margin:-12px 0 28px" data-en="Problems I have actually run into on projects, and how I solved them.">Des problèmes rencontrés pour de vrai en projet, et la façon dont je les ai résolus.</p>
+<div class="tips"><article class="tip reveal"><h3 data-en="Setting a lookup in “Add a new row”">Lier un enregistrement dans « Add a new row »</h3><p data-en="The Power Automate picker does not offer the related record you need. Switch to “Enter custom value” and type the entity set name, in the plural, followed by the GUID in parentheses.">Le sélecteur de Power Automate ne propose pas l&#x27;enregistrement lié voulu. Passer en « Entrer une valeur personnalisée » et saisir le nom du jeu d&#x27;entités, au pluriel, suivi du GUID entre parenthèses.</p><div class="code"><pre>oth_dossiers(@{triggerBody()?[&#x27;entityId&#x27;]})</pre><button class="copy" type="button" data-en="Copy">Copier</button></div></article><article class="tip reveal"><h3 data-en="Showing a Choice column&#x27;s label">Afficher le libellé d&#x27;une colonne Choix</h3><p data-en="Dataverse returns the choice&#x27;s numeric value (100000001), not its label. The FormattedValue annotation gives the text users see, with no lookup table.">Dataverse renvoie la valeur numérique du choix (100000001), pas son libellé. L&#x27;annotation FormattedValue donne directement le texte affiché à l&#x27;utilisateur, sans table de correspondance.</p><div class="code"><pre>item()?[&#x27;oth_statut@OData.Community.Display.V1.FormattedValue&#x27;]</pre><button class="copy" type="button" data-en="Copy">Copier</button></div></article><article class="tip reveal"><h3 data-en="Securing an HTTP-triggered flow">Sécuriser un flow déclenché par HTTP</h3><p data-en="The signed URL is enough until it leaks. I add an x-api-key header checked by a condition right after the trigger: if it does not match, the flow returns 401 and stops.">L&#x27;URL signée suffit tant qu&#x27;elle ne fuite pas. J&#x27;ajoute un en-tête x-api-key vérifié par une condition juste après le déclencheur : s&#x27;il ne correspond pas, le flow répond 401 et s&#x27;arrête.</p><div class="code"><pre>equals(triggerOutputs()?[&#x27;headers&#x27;]?[&#x27;x-api-key&#x27;], parameters(&#x27;ApiKey&#x27;))</pre><button class="copy" type="button" data-en="Copy">Copier</button></div></article><article class="tip reveal"><h3 data-en="Turning a list into text without a loop">Transformer une liste en texte sans boucle</h3><p data-en="An Apply to each appending to a variable is slow, and join() does not work on a loop&#x27;s output. A Select action that maps each row to text, followed by join(), does the same in one step.">Un Apply to each qui concatène dans une variable est lent, et join() ne s&#x27;applique pas à la sortie d&#x27;une boucle. Une action Select qui convertit chaque ligne en texte, suivie de join(), fait la même chose en une étape.</p><div class="code"><pre>join(body(&#x27;Select&#x27;), decodeUriComponent(&#x27;%0A&#x27;))</pre><button class="copy" type="button" data-en="Copy">Copier</button></div></article></div>
+</div></section>
+
+<section class="band alt" id="stack"><div class="wrap">
 <h2 class="reveal" data-en="Tech stack">Stack technique</h2>
 <div class="stack" id="stackgrid"></div>
 </div></section>
 
-<section class="band alt" id="certifications"><div class="wrap">
+<section class="band" id="certifications"><div class="wrap">
 <h2 class="reveal" data-en="Microsoft certifications">Certifications Microsoft</h2>
 <div class="certs" id="certs"></div>
 <div class="two reveal" style="margin-top:56px">
@@ -262,7 +280,7 @@ footer{padding:24px max(5vw,16px);border-top:1px solid var(--line);color:var(--m
 </div>
 </div></section>
 
-<section class="band" id="contact"><div class="wrap contact reveal">
+<section class="band alt" id="contact"><div class="wrap contact reveal">
 <div><p class="big" data-en="Let's talk about your Dynamics 365 project.">Parlons de votre projet Dynamics 365.</p>
 <a class="btn main" href="CV_Othmen_MTIRA.pdf" download style="margin-top:24px" data-en="Download my CV (PDF)">Télécharger mon CV (PDF)</a></div>
 <div class="lines">
@@ -339,6 +357,7 @@ const sun='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1
 function applyMode(){const light=root.dataset.mode==='light';document.getElementById('modeIco').innerHTML=light?moon:sun;const mb=document.getElementById('modeBtn');mb.setAttribute('aria-label',light?(lang==='en'?'Switch to dark mode':'Passer en mode sombre'):(lang==='en'?'Switch to light mode':'Passer en mode clair'))}
 applyMode();
 document.getElementById('modeBtn').addEventListener('click',()=>{root.dataset.mode=root.dataset.mode==='light'?'dark':'light';try{localStorage.setItem('om-mode',root.dataset.mode)}catch(e){}applyMode()});
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',async()=>{const t=b.parentElement.querySelector('pre').textContent;const was=b.innerHTML;try{await navigator.clipboard.writeText(t);b.textContent=lang==='en'?'Copied':'Copié'}catch(e){b.textContent=lang==='en'?'Select it':'Sélectionnez'}setTimeout(()=>{b.innerHTML=lang==='en'?b.dataset.en:b.dataset.fr},1600)}));
 document.documentElement.classList.add('js');
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const io=new IntersectionObserver(es=>{for(const e of es){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);if(e.target.classList.contains('proj'))stagger(e.target)}}},{threshold:.15,rootMargin:'0px 0px -40px 0px'});
