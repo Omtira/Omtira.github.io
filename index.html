@@ -110,6 +110,8 @@ pre em{font-style:normal;color:var(--rose)}
 .cert{border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}
 .cert .code{font-family:"Inter Tight";font-weight:600;font-size:22px;color:var(--rose)}
 .cert .t{font-size:15px;line-height:1.4}
+a.cert{color:var(--ink);text-decoration:none}
+.cert .v{font-size:13px;color:var(--rose);font-weight:600}
 .cert .d{font-size:14px;color:var(--mute);margin-top:auto}
 .edu{display:grid;gap:16px}
 .contact{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:clamp(24px,4vw,56px);align-items:end}
@@ -266,6 +268,8 @@ footer{padding:24px max(5vw,16px);border-top:1px solid var(--line);color:var(--m
 
 <section class="band" id="certifications"><div class="wrap">
 <h2 class="reveal" data-en="Microsoft certifications">Certifications Microsoft</h2>
+<p class="lead reveal" style="margin:-12px 0 24px" data-en="Every certification can be checked on my official Microsoft Learn transcript.">Chaque certification est vérifiable sur mon transcript officiel Microsoft Learn.</p>
+<p class="reveal" style="margin:0 0 24px"><a class="btn ghost" href="https://learn.microsoft.com/fr-fr/users/othmenmtira-5647/transcript/vmkgbkk8knjjol7" data-en="View my official transcript">Voir mon transcript officiel</a></p>
 <div class="certs" id="certs"></div>
 <div class="two reveal" style="margin-top:56px">
 <div><h2 style="margin-bottom:16px" data-en="Education">Formation</h2>
@@ -336,7 +340,7 @@ function renderLists(shown){
 const cls=shown?'reveal in':'reveal';
 document.getElementById('jobs').innerHTML=jobs.map(j=>`<div class="job ${cls}"><div class="when">${L(j.when)}</div><div><h3>${L(j.t)}</h3><p class="co">${L(j.co)}</p><ul>${L(j.b).map(x=>`<li>${x}</li>`).join('')}</ul><div class="chips">${chips(j.c)}</div></div></div>`).join('');
 document.getElementById('stackgrid').innerHTML=stack.map(g=>`<div class="box ${cls}"><h3>${L(g.h)}</h3><div class="chips">${chips(g.c)}</div></div>`).join('');
-document.getElementById('certs').innerHTML=certs.map(([c,t,d])=>`<div class="cert ${cls}"><span class="code">${c}</span><span class="t">${t}</span><span class="d">${L(d)}</span></div>`).join('');
+document.getElementById('certs').innerHTML=certs.map(([c,t,d])=>`<a class="cert ${cls}" href="https://learn.microsoft.com/fr-fr/users/othmenmtira-5647/transcript/vmkgbkk8knjjol7" aria-label="${t} : ${lang==='en'?'verify on Microsoft Learn':'vérifier sur Microsoft Learn'}"><span class="code">${c}</span><span class="t">${t}</span><span class="d">${L(d)}</span><span class="v">${lang==='en'?'Verify on Microsoft Learn':'Vérifier sur Microsoft Learn'}</span></a>`).join('');
 }
 renderLists(false);
 const words={fr:["plugins C# et JavaScript","migrations Dynamics 365 on-premise","Power Automate et Dataverse","Copilot Studio et IA appliquée au CRM","intégrations REST et Azure AD"],en:["C# plugins and JavaScript","on-premise Dynamics 365 migrations","Power Automate and Dataverse","Copilot Studio and AI for CRM","REST and Azure AD integrations"]};
