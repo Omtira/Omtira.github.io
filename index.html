@@ -172,7 +172,7 @@ footer{padding:24px max(5vw,16px);border-top:1px solid var(--line);color:var(--m
 <div class="herogrid">
 <div class="intro">
 <p class="lead" data-en="I help companies design, build and evolve their CRM solutions, from on-premise to the cloud: C# plugins, JavaScript, Power Automate, integrations and migrations, all the way to go-live.">J'accompagne les entreprises dans la conception, le développement et l'évolution de leurs solutions CRM, de l'on-premise au cloud : plugins C#, JavaScript, Power Automate, intégrations et migrations, jusqu'à la mise en production.</p>
-<div class="btns"><a class="btn main" href="#contact" data-en="Contact me">Me contacter</a><a class="btn ghost" href="CV_Othmen_MTIRA.pdf" download data-en="Download my CV (PDF, FR)">Télécharger mon CV</a><a class="btn ghost" href="#parcours" data-en="See my experience">Voir mon parcours</a></div>
+<div class="btns"><a class="btn main" href="#contact" data-en="Contact me">Me contacter</a><a class="btn ghost" href="CV_Othmen_MTIRA.pdf" download data-en="Download my CV (PDF)">Télécharger mon CV</a><a class="btn ghost" href="#parcours" data-en="See my experience">Voir mon parcours</a></div>
 <div class="figs" id="apropos">
 <div><strong data-n="7" data-s=" ans" data-s-en=" yrs">7 ans</strong><span data-en="on Dynamics 365 CE and Power Platform">sur Dynamics 365 CE et Power Platform</span></div>
 <div><strong data-n="10">10</strong><span data-en="Microsoft certifications">certifications Microsoft</span></div>
@@ -264,7 +264,7 @@ footer{padding:24px max(5vw,16px);border-top:1px solid var(--line);color:var(--m
 
 <section class="band" id="contact"><div class="wrap contact reveal">
 <div><p class="big" data-en="Let's talk about your Dynamics 365 project.">Parlons de votre projet Dynamics 365.</p>
-<a class="btn main" href="CV_Othmen_MTIRA.pdf" download style="margin-top:24px" data-en="Download my CV (PDF, FR)">Télécharger mon CV (PDF)</a></div>
+<a class="btn main" href="CV_Othmen_MTIRA.pdf" download style="margin-top:24px" data-en="Download my CV (PDF)">Télécharger mon CV (PDF)</a></div>
 <div class="lines">
 <a href="mailto:othmenmtira@gmail.com">othmenmtira@gmail.com <span>Email</span></a>
 <a href="tel:+33647059171">06 47 05 91 71 <span data-en="Phone">Téléphone</span></a>
@@ -331,6 +331,7 @@ document.querySelectorAll('[data-en-aria]').forEach(el=>{el.dataset.frAria=el.da
 document.querySelectorAll('[data-n]').forEach(el=>{el.textContent=el.dataset.n+((lang==='en'?el.dataset.sEn:el.dataset.s)||'')});
 const lb=document.getElementById('langBtn');lb.textContent=lang==='en'?'FR':'EN';lb.setAttribute('aria-label',lang==='en'?'Passer en français':'Switch to English');
 document.getElementById('typed').textContent=words[lang][0];
+document.querySelectorAll('a[download]').forEach(x=>x.setAttribute('href',lang==='en'?'CV_Othmen_MTIRA_EN.pdf':'CV_Othmen_MTIRA.pdf'));
 }
 if(lang==='en')applyLang();
 document.getElementById('langBtn').addEventListener('click',()=>{lang=lang==='en'?'fr':'en';try{localStorage.setItem('om-lang',lang)}catch(e){}renderLists(true);applyLang();onScroll()});
