@@ -81,8 +81,31 @@ nav .wrap{display:flex;align-items:center;gap:24px;padding:12px max(5vw,16px);fl
 @media(prefers-reduced-motion:reduce){.track{animation:none;flex-wrap:wrap;width:auto}html{scroll-behavior:auto}}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px)}
 .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.step{background:var(--card);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px}
-.step .n{font-family:"Inter Tight";font-weight:300;font-size:44px;line-height:1;color:var(--rose)}
+.step{position:relative;background:var(--card);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px;border:1px solid transparent;cursor:pointer;overflow:visible}
+.step .shead{display:flex;align-items:center;justify-content:space-between}
+.step .n{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-family:"Inter Tight";font-weight:500;font-size:20px;color:var(--rose);border:2px solid var(--line);background:var(--bg);position:relative;z-index:2;transition:background .4s,color .4s,border-color .4s,transform .4s}
+.step .ico{position:absolute;top:12px;right:14px;width:24px;height:24px;color:var(--mute);transition:color .4s,transform .4s}
+.step::after{content:"";position:absolute;top:46px;left:70px;width:calc(100% - 70px + 38px);height:2px;background:var(--line);z-index:0}
+.step:last-child::after{display:none}
+.step .wire{position:absolute;top:46px;left:70px;width:calc(100% - 70px + 38px);height:2px;background:var(--rose);transform:scaleX(0);transform-origin:left;transition:transform .6s ease;z-index:1}
+.step:last-child .wire{display:none}
+.step.done .wire{transform:scaleX(1)}
+.step.act,.step.done{border-color:color-mix(in srgb,var(--rose) 40%,transparent)}
+.step.act .n,.step.done .n{background:var(--rose);color:var(--on);border-color:var(--rose)}
+.step.act .n{transform:scale(1.1);box-shadow:0 0 0 6px color-mix(in srgb,var(--rose) 22%,transparent)}
+.step.act .ico{color:var(--rose);transform:rotate(-8deg) scale(1.1)}
+.step .timer{position:absolute;left:14px;right:14px;bottom:8px;height:3px;border-radius:3px;background:var(--rose);transform:scaleX(0);transform-origin:left;opacity:0}
+.step.act .timer.run{opacity:1;animation:tick var(--dur,5s) linear forwards}
+@keyframes tick{to{transform:scaleX(1)}}
+.steps:hover .timer{animation-play-state:paused}
+.js .steps.live .step:not(.act):not(:hover){opacity:.6}
+.step.act li{animation:liIn .5s ease both}
+.step.act li:nth-child(2){animation-delay:.12s}
+.step.act li:nth-child(3){animation-delay:.24s}
+@keyframes liIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+.step:focus-visible{outline:2px solid var(--rose);outline-offset:3px}
+@media(max-width:960px){.step::after,.step .wire{display:none}}
+@media(prefers-reduced-motion:reduce){.step.act li{animation:none}.step .timer{display:none}}
 .step ul{margin:0;padding-left:18px;color:var(--soft);font-size:15px;display:grid;gap:6px}
 .tl{display:grid;gap:0;border-left:2px solid var(--line);margin-left:6px}
 .job{position:relative;padding:0 0 34px 28px;display:grid;grid-template-columns:minmax(0,190px) minmax(0,1fr);gap:8px 28px}
@@ -203,11 +226,11 @@ footer{padding:24px max(5vw,16px);border-top:1px solid var(--line);color:var(--m
 
 <section class="band alt" id="methode"><div class="wrap">
 <h2 class="reveal" data-en="An end-to-end method">Une méthode de bout en bout</h2>
-<div class="steps">
-<div class="step reveal"><span class="n">1</span><h3 data-en="Analyse">Analyser</h3><ul data-en="<li>Requirements gathering and analysis</li><li>Feasibility studies</li><li>Review of the existing system and constraints</li>"><li>Recueil et analyse des besoins</li><li>Études de faisabilité</li><li>Lecture de l'existant et des contraintes</li></ul></div>
-<div class="step reveal"><span class="n">2</span><h3 data-en="Design">Concevoir</h3><ul data-en="<li>Technical specifications</li><li>Dataverse data modelling</li><li>Security: roles, Business Units, FLS</li>"><li>Spécifications techniques</li><li>Modélisation Dataverse</li><li>Sécurité : rôles, Business Units, FLS</li></ul></div>
-<div class="step reveal"><span class="n">3</span><h3 data-en="Build">Construire</h3><ul data-en="<li>C# plugins, Custom APIs, JavaScript</li><li>Power Apps and Power Automate</li><li>REST, OAuth and SharePoint integrations</li>"><li>Plugins C#, Custom APIs, JavaScript</li><li>Power Apps et Power Automate</li><li>Intégrations REST, OAuth, SharePoint</li></ul></div>
-<div class="step reveal"><span class="n">4</span><h3 data-en="Sustain">Faire durer</h3><ul data-en="<li>Go-live support</li><li>Technical documentation</li><li>Maintenance, back to standard</li>"><li>Accompagnement des mises en production</li><li>Documentation technique</li><li>Maintenance, retour au standard</li></ul></div>
+<div class="steps" id="steps">
+<div class="step reveal" tabindex="0" role="button" data-i="0"><span class="wire"></span><div class="shead"><span class="n">1</span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8 11h6M11 8v6"/></svg></div><h3 data-en="Analyse">Analyser</h3><ul data-en="<li>Requirements gathering and analysis</li><li>Feasibility studies</li><li>Review of the existing system and constraints</li>"><li>Recueil et analyse des besoins</li><li>Études de faisabilité</li><li>Lecture de l'existant et des contraintes</li></ul><span class="timer"></span></div>
+<div class="step reveal" tabindex="0" role="button" data-i="1"><span class="wire"></span><div class="shead"><span class="n">2</span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><h3 data-en="Design">Concevoir</h3><ul data-en="<li>Technical specifications</li><li>Dataverse data modelling</li><li>Security: roles, Business Units, FLS</li>"><li>Spécifications techniques</li><li>Modélisation Dataverse</li><li>Sécurité : rôles, Business Units, FLS</li></ul><span class="timer"></span></div>
+<div class="step reveal" tabindex="0" role="button" data-i="2"><span class="wire"></span><div class="shead"><span class="n">3</span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></div><h3 data-en="Build">Construire</h3><ul data-en="<li>C# plugins, Custom APIs, JavaScript</li><li>Power Apps and Power Automate</li><li>REST, OAuth and SharePoint integrations</li>"><li>Plugins C#, Custom APIs, JavaScript</li><li>Power Apps et Power Automate</li><li>Intégrations REST, OAuth, SharePoint</li></ul><span class="timer"></span></div>
+<div class="step reveal" tabindex="0" role="button" data-i="3"><span class="wire"></span><div class="shead"><span class="n">4</span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></div><h3 data-en="Sustain">Faire durer</h3><ul data-en="<li>Go-live support</li><li>Technical documentation</li><li>Maintenance, back to standard</li>"><li>Accompagnement des mises en production</li><li>Documentation technique</li><li>Maintenance, retour au standard</li></ul><span class="timer"></span></div>
 </div>
 </div></section>
 
@@ -364,6 +387,16 @@ applyMode();
 document.getElementById('modeBtn').addEventListener('click',()=>{root.dataset.mode=root.dataset.mode==='light'?'dark':'light';try{localStorage.setItem('om-mode',root.dataset.mode)}catch(e){}applyMode()});
 document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',async()=>{const t=b.parentElement.querySelector('pre').textContent;const was=b.innerHTML;try{await navigator.clipboard.writeText(t);b.textContent=lang==='en'?'Copied':'Copié'}catch(e){b.textContent=lang==='en'?'Select it':'Sélectionnez'}setTimeout(()=>{b.innerHTML=lang==='en'?b.dataset.en:b.dataset.fr},1600)}));
 document.documentElement.classList.add('js');
+{
+const wrap=document.getElementById('steps'),st=[...wrap.querySelectorAll('.step')],rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let act=0,timer=null,inView=false,hold=0;const DUR=5000;
+function setStep(i){act=i;st.forEach((x,k)=>{x.classList.toggle('act',k===i);x.classList.toggle('done',k<i);x.setAttribute('aria-pressed',k===i?'true':'false');const t=x.querySelector('.timer');t.classList.remove('run');if(k===i&&!rm){void t.offsetWidth;t.style.setProperty('--dur',DUR+'ms');t.classList.add('run')}})}
+function play(){clearInterval(timer);if(rm||!inView)return;timer=setInterval(()=>{if(Date.now()<hold)return;setStep((act+1)%st.length)},DUR)}
+st.forEach((x,k)=>{const go=()=>{setStep(k);hold=Date.now()+DUR*2;play()};x.addEventListener('click',go);x.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}})});
+wrap.addEventListener('mouseenter',()=>{hold=Infinity});wrap.addEventListener('mouseleave',()=>{hold=0});
+new IntersectionObserver(es=>{for(const e of es){inView=e.isIntersecting;if(inView){wrap.classList.add('live');setStep(act);play()}else clearInterval(timer)}},{threshold:.35}).observe(wrap);
+setStep(0);
+}
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const io=new IntersectionObserver(es=>{for(const e of es){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);if(e.target.classList.contains('proj'))stagger(e.target)}}},{threshold:.15,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(el.parentElement.children.length>1?Math.min([...el.parentElement.children].indexOf(el),5)*80:0)+'ms';io.observe(el)});
