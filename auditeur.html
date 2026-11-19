@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auditeur Dataverse</title>
+<meta name="description" content="Étude de cas : un auditeur d&#x27;environnement Dataverse construit avec Power Automate et Power Apps, qui détecte six mauvaises pratiques et produit un rapport Excel noté.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Auditeur d&#x27;environnement Dataverse · Othmen MTIRA">
+<meta property="og:description" content="Étude de cas : un auditeur d&#x27;environnement Dataverse construit avec Power Automate et Power Apps, qui détecte six mauvaises pratiques et produit un rapport Excel noté.">
+<meta property="og:url" content="https://omtira.github.io/auditeur.html">
+<meta property="og:image" content="https://omtira.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://omtira.github.io/auditeur.html">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%231a0f1f%22/%3E%3Ctext%20x%3D%228%22%20y%3D%2243%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-weight%3D%22700%22%20font-size%3D%2230%22%20fill%3D%22%23fff%22%3EOM%3C/text%3E%3Ccircle%20cx%3D%2256%22%20cy%3D%2240%22%20r%3D%224%22%20fill%3D%22%23ff8fa3%22/%3E%3C/svg%3E">
+<script>try{var m=localStorage.getItem('om-mode');if(m)document.documentElement.dataset.mode=m;var l=localStorage.getItem('om-lang');if(l)document.documentElement.dataset.lang=l}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE a technical case study read by recruiters and leads: precise, calm
+   IDEA the request's journey through the platform, like a metro line with stations
+   PICTURE a six-station route with a token travelling from the form to the AI and back
+   COLOUR plum-black ground, white ink, rose accent, dusk support (same as the portfolio)
+   TYPE Inter Tight 300 very large + Inter
+   LAYOUT laptop: title, then the route full width with its caption; phone: vertical route */
+:root{color-scheme:dark;--bg:#1a0f1f;--bg2:#24152b;--card:#2c1b34;--line:#45304f;--ink:#ffffff;--soft:#d9cde0;--mute:#b4a3c1;--rose:#ff8fa3;--dusk:#8f7aa8;--on:#1a0f1f}
+:root[data-mode=light]{color-scheme:light;--bg:#ffffff;--bg2:#f7eff9;--card:#f3e8f6;--line:#e2d0e8;--ink:#1a0f1f;--soft:#45354f;--mute:#695774;--rose:#c2375a;--dusk:#b9a6cc;--on:#ffffff}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif;overflow-x:clip}
+a{color:var(--rose)}
+a:focus-visible,button:focus-visible,.stn:focus-visible{outline:2px solid var(--rose);outline-offset:3px}
+.wrap{max-width:1240px;margin:0 auto}
+.band{padding-block:clamp(36px,5vw,72px);padding-left:max(5vw,16px);padding-right:max(5vw,16px)}
+.alt{background:var(--bg2)}
+h1,h2,h3{font-family:"Inter Tight",Inter,sans-serif;margin:0;text-wrap:balance}
+h1{font-weight:300;font-size:clamp(40px,7vw,84px);line-height:1;letter-spacing:-.03em}
+h2{font-weight:500;font-size:clamp(28px,3.6vw,42px);line-height:1.08;letter-spacing:-.02em;margin-bottom:24px}
+h3{font-weight:600;font-size:19px;line-height:1.3}
+p{margin:0}
+.lead{font-size:18px;color:var(--soft);max-width:66ch}
+nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:16px;padding:12px max(5vw,16px)}
+.back{color:var(--soft);text-decoration:none;font-size:15px;display:inline-flex;align-items:center;gap:8px;min-height:44px}
+.back:hover{color:var(--ink)}
+.logo{font-family:"Inter Tight";font-weight:600;font-size:22px;color:var(--ink);text-decoration:none}
+.logo b{color:var(--rose)}
+.tools{margin-left:auto;display:flex;gap:8px}
+.tg{min-width:44px;height:40px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);font:600 14px Inter,sans-serif;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.tg svg{width:18px;height:18px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-size:13px;padding:4px 10px;border-radius:999px;background:var(--card);color:var(--soft);border:1px solid var(--line)}
+.kicker{color:var(--rose);font-weight:600;font-size:15px;margin-bottom:14px}
+.hero .lead{margin-top:20px}
+.hero .chips{margin-top:22px}
+.figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:32px}
+.figs div{background:var(--bg);padding:16px 18px}
+.figs strong{display:block;font-family:"Inter Tight";font-weight:300;font-size:clamp(34px,4vw,48px);line-height:1}
+.figs span{font-size:14px;color:var(--mute)}
+.route{position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-top:8px;padding-top:4px}
+.rail,.fill{position:absolute;background:var(--line);height:3px;border-radius:3px;z-index:0}
+.fill{background:var(--rose);transition:width .7s ease,height .7s ease}
+.token{position:absolute;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;border:2px solid var(--rose);box-shadow:0 0 22px color-mix(in srgb,var(--rose) 45%,transparent);z-index:2;pointer-events:none;transition:left .7s ease,top .7s ease}
+.stn .txt{display:flex;flex-direction:column;align-items:center;gap:2px}
+.stn{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;cursor:pointer;padding:6px 4px 12px;border-radius:12px;background:transparent;border:0;color:inherit;font:inherit}
+.dot{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--bg2);border:2px solid var(--line);color:var(--mute);transition:all .4s}
+.dot svg{width:24px;height:24px}
+.stn b{font-family:"Inter Tight";font-weight:600;font-size:16px;line-height:1.25}
+.stn small{font-size:13px;color:var(--mute);line-height:1.3}
+.stn.done .dot{border-color:var(--rose);color:var(--rose)}
+.stn.act .dot{background:var(--rose);border-color:var(--rose);color:var(--on);transform:scale(1.12)}
+.cap{margin-top:18px;background:var(--card);border-radius:14px;padding:20px 22px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 18px;align-items:start;min-height:112px}
+.cap .num{font-family:"Inter Tight";font-weight:300;font-size:48px;line-height:1;color:var(--rose)}
+.cap h3{margin-bottom:4px}
+.cap p{color:var(--soft)}
+.side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.side div{border:1px dashed var(--line);border-radius:12px;padding:14px 16px;font-size:15px;color:var(--soft)}
+.side b{color:var(--ink)}
+.ctl{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.ctl button{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);font:600 14px Inter,sans-serif;cursor:pointer}
+.ctl button:hover{border-color:var(--rose)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.card{background:var(--card);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:10px;transition:transform .25s}
+.card:hover{transform:translateY(-4px)}
+.card .n{font-family:"Inter Tight";font-weight:300;font-size:38px;line-height:1;color:var(--rose)}
+.card p,.card li{color:var(--soft);font-size:15px}
+.card ul{margin:0;padding-left:18px;display:grid;gap:5px}
+.tl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.lesson{border-top:2px solid var(--rose);padding-top:14px;display:flex;flex-direction:column;gap:8px}
+.lesson p{color:var(--soft);font-size:15px}
+code{font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:2px 6px;overflow-wrap:anywhere}
+.cta{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;min-height:46px;padding:0 22px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid var(--rose)}
+.btn.main{background:var(--rose);color:var(--on)}
+.btn.ghost{color:var(--ink);border-color:var(--line)}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+footer{padding:24px max(5vw,16px);border-top:1px solid var(--line);color:var(--mute);font-size:14px}
+.js .rv{opacity:0;transform:translateY(22px);transition:opacity .7s,transform .7s}
+.js .rv.in{opacity:1;transform:none}
+@media(max-width:900px){.figs{grid-template-columns:repeat(3,minmax(0,1fr))}.tl{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:720px){
+.route{grid-template-columns:minmax(0,1fr);gap:6px;padding-left:4px}
+.stn{flex-direction:row;text-align:left;align-items:center;gap:14px;padding:8px 4px}
+.stn .txt{align-items:flex-start}
+.grid2,.side{grid-template-columns:minmax(0,1fr)}
+.figs{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cap{grid-template-columns:minmax(0,1fr)}
+}
+@media(prefers-reduced-motion:reduce){.token,.fill{transition:none}.js .rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+<a class="back" href="index.html#projets"><span aria-hidden="true">←</span> <span data-en="Back to portfolio">Retour au portfolio</span></a>
+<div class="tools"><button class="tg" id="langBtn" type="button" aria-label="Switch to English">EN</button><button class="tg" id="modeBtn" type="button" aria-label="Passer en mode clair"><svg id="modeIco" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"></svg></button></div>
+</div></nav>
+
+<header class="band hero"><div class="wrap">
+<p class="kicker" data-en="Case study · Side project">Étude de cas · Projet personnel</p>
+<h1 data-en="A Dataverse environment auditor">Un auditeur d'environnement Dataverse</h1>
+<p class="lead" data-en="A tool that scans a Dataverse environment, spots common anti-patterns and produces a scored report, launched in one click from a Power App.">Un outil qui passe un environnement Dataverse au crible, repère les mauvaises pratiques et produit un rapport noté, lancé en un clic depuis une Power App.</p>
+<div class="chips"><span>Power Automate</span><span>Connecteur Dataverse</span><span>Power Apps canvas</span><span>Excel</span><span>OneDrive</span></div>
+<div class="figs"><div><strong>6</strong><span data-en="automated checks">contrôles automatiques</span></div><div><strong>2</strong><span data-en="severity levels">niveaux de gravité</span></div><div><strong>1</strong><span data-en="timestamped Excel report per run">rapport Excel horodaté par audit</span></div><div><strong>1</strong><span data-en="click from a Power App">clic depuis une Power App</span></div></div>
+</div></header>
+
+<section class="band alt"><div class="wrap">
+<h2 class="rv" data-en="How an audit runs">Le déroulé d'un audit</h2>
+<div class="route rv" id="route">
+<span class="rail" id="rail"></span><span class="fill" id="fill"></span><span class="token" id="token" aria-hidden="true"></span>
+</div>
+<div class="cap" id="cap" aria-live="polite"><span class="num" id="capN">1</span><div><h3 id="capT"></h3><p id="capD"></p></div></div>
+<div class="ctl"><button type="button" id="prev" data-en="Previous">Précédent</button><button type="button" id="play" data-en="Pause">Pause</button><button type="button" id="next" data-en="Next">Suivant</button></div>
+<div class="side"><div data-en="&lt;b&gt;In the app:&lt;/b&gt; the score shows in green, amber or red based on thresholds, with a breakdown of high and medium findings, or a dedicated message when everything is clean."><b>Dans la Power App :</b> le score s'affiche en vert, orange ou rouge selon des seuils, avec le détail des anomalies élevées et moyennes, ou un message dédié quand tout est propre.</div><div data-en="&lt;b&gt;In the report:&lt;/b&gt; one table for the score and one for the findings, ready to filter and share."><b>Dans le rapport :</b> une table pour le score et une table pour les anomalies, prêtes à filtrer et à partager.</div></div>
+</div></section>
+
+<section class="band"><div class="wrap">
+<h2 class="rv" data-en="The six checks">Les six contrôles</h2>
+<div class="grid2"><article class="card rv"><span class="n">1</span><h3 data-en="Unmanaged solutions">Solutions non managées</h3><p data-en="Flags unmanaged solutions in the environment.">Repère les solutions non managées présentes dans l'environnement.</p></article><article class="card rv"><span class="n">2</span><h3 data-en="Custom security roles">Rôles de sécurité personnalisés</h3><p data-en="Lists custom roles that deserve a review.">Liste les rôles personnalisés à revoir.</p></article><article class="card rv"><span class="n">3</span><h3 data-en="Synchronous classic workflows">Workflows classiques synchrones</h3><p data-en="Flags classic workflows running synchronously.">Repère les workflows classiques exécutés en synchrone.</p></article><article class="card rv"><span class="n">4</span><h3 data-en="Synchronous plugin steps">Étapes de plugin synchrones</h3><p data-en="Flags plugin steps registered as synchronous.">Repère les étapes de plugin enregistrées en synchrone.</p></article><article class="card rv"><span class="n">5</span><h3 data-en="Disabled flows">Flows désactivés</h3><p data-en="Lists Power Automate flows that are turned off.">Liste les flows Power Automate désactivés.</p></article><article class="card rv"><span class="n">6</span><h3 data-en="Flows owned by personal accounts">Flows détenus par un compte personnel</h3><p data-en="Flags flows owned by a user rather than a service account.">Repère les flows possédés par un utilisateur plutôt que par un compte applicatif.</p></article></div>
+</div></section>
+
+<section class="band alt"><div class="wrap">
+<h2 class="rv" data-en="Design choices">Les choix de conception</h2>
+<div class="grid2"><article class="card rv"><h3 data-en="Power Automate over a script">Power Automate plutôt qu'un script</h3><p data-en="I chose a no-code approach on the Dataverse connector over a PowerShell script, so the whole team can read and change it.">J'ai préféré une approche sans code, avec le connecteur Dataverse, à un script PowerShell : l'outil reste lisible et modifiable par toute l'équipe.</p></article><article class="card rv"><h3 data-en="A report that lasts">Un rapport qui reste</h3><p data-en="Each audit creates its own timestamped Excel file, so runs can be compared over time.">Chaque audit produit son propre fichier Excel horodaté : on peut comparer deux audits dans le temps.</p></article><article class="card rv"><h3 data-en="A one-click demo">Une démo en un clic</h3><p data-en="The app makes the tool usable by people who never open Power Automate.">La Power App rend l'outil utilisable par quelqu'un qui n'ouvre jamais Power Automate.</p></article><article class="card rv"><h3 data-en="Next step">Prochaine étape</h3><p data-en="Run it on a real client environment, with their permission.">Le tester sur un vrai environnement client, avec son autorisation.</p></article></div>
+</div></section>
+
+<section class="band"><div class="wrap">
+<h2 class="rv" data-en="What I learned along the way">Ce que j'en retiens</h2>
+<div class="tl"><div class="lesson rv"><h3 data-en="Merging several result sets">Fusionner plusieurs résultats</h3><p data-en="union() combines each check&#x27;s list into one array, with no loop.">La fonction union() regroupe les listes de chaque contrôle en un seul tableau, sans boucle.</p><code>union(body(&#x27;Check_1&#x27;), body(&#x27;Check_2&#x27;))</code></div><div class="lesson rv"><h3 data-en="The OneDrive link has to be built">Le lien OneDrive se construit</h3><p data-en="The OneDrive connector does not return a web URL for the new file, so the report link is built manually.">Le connecteur OneDrive ne renvoie pas d'URL web pour le fichier créé : le lien du rapport est construit manuellement.</p></div><div class="lesson rv"><h3 data-en="Typed outputs to Power Apps">Des sorties typées vers Power Apps</h3><p data-en="“Respond to a PowerApp or flow” returns text (the link) and a number (the score) the app can use directly.">L'action « Respond to a PowerApp or flow » renvoie un texte (le lien) et un nombre (le score), directement exploitables dans l'application.</p></div></div>
+</div></section>
+
+<section class="band alt"><div class="wrap cta">
+<div><h2 style="margin-bottom:8px" data-en="Want a walkthrough?">Envie d'une démonstration ?</h2><p class="lead" data-en="I am happy to walk you through the solution live.">Je présente volontiers la solution en direct.</p></div>
+<div class="btns"><a class="btn main" href="index.html#contact" data-en="Contact me">Me contacter</a><a class="btn ghost" href="assistant-ia.html" data-en="Case study: AI Assistant">Étude de cas : Assistant IA</a><a class="btn ghost" href="fetchxml.html" data-en="Case study: FetchXML Generator">Étude de cas : Générateur FetchXML</a></div>
+</div></section>
+
+<footer><div class="wrap"><span data-en="© 2026 Othmen MTIRA · Dynamics 365 CE &amp; Power Platform Consultant · Paris">© 2026 Othmen MTIRA · Consultant Dynamics 365 CE &amp; Power Platform · Paris</span></div></footer>
+
+<script>
+{
+const root=document.documentElement;let lang=root.dataset.lang==='en'?'en':'fr';
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const ic={app:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/>',flow:'<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H14a4 4 0 0 1 4 4v5.5"/>',check:'<path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',merge:'<path d="M6 3v6a6 6 0 0 0 6 6h6"/><path d="M18 3v6a6 6 0 0 1-6 6"/><path d="m15 18 3-3-3-3"/>',gauge:'<path d="M12 14l4-4"/><path d="M3.3 17a9 9 0 1 1 17.4 0"/>',sheet:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>',chrome:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/>',db:'<ellipse cx="12" cy="5.5" rx="7" ry="2.5"/><path d="M5 5.5v13c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-13M5 12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5"/>',key:'<circle cx="7.5" cy="15.5" r="3.5"/><path d="m10 13 9-9M16 7l2 2M14 9l2 2"/>',ai:'<path d="M12 3l1.8 4.6L18.5 9l-4.7 1.6L12 15l-1.8-4.4L5.5 9l4.7-1.4z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',code:'<path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/>'};
+const S=[{i:'app',t:{fr:'Power App',en:'Power App'},s:{fr:"Bouton « Lancer l'audit »",en:'“Run audit” button'},d:{fr:"L'utilisateur lance l'audit depuis une Power App canvas dédiée.",en:'The user starts the audit from a dedicated Power Apps canvas app.'}},{i:'flow',t:{fr:'Power Automate',en:'Power Automate'},s:{fr:'Flow déclenché par Power Apps',en:'Power Apps-triggered flow'},d:{fr:"La Power App appelle le flow d'analyse, construit sans code avec le connecteur Dataverse.",en:'The app calls the analysis flow, built with no code on the Dataverse connector.'}},{i:'check',t:{fr:'Six contrôles',en:'Six checks'},s:{fr:'Connecteur Dataverse',en:'Dataverse connector'},d:{fr:"Le flow interroge l'environnement : solutions non managées, rôles personnalisés, workflows et étapes de plugin synchrones, flows désactivés ou détenus par un compte personnel.",en:'The flow queries the environment: unmanaged solutions, custom roles, synchronous workflows and plugin steps, disabled flows and flows owned by personal accounts.'}},{i:'merge',t:{fr:'Consolidation',en:'Consolidation'},s:{fr:'union() des résultats',en:'union() of results'},d:{fr:"Les résultats des six contrôles sont fusionnés en un seul tableau d'anomalies avec la fonction union().",en:'The six result sets are merged into a single list of findings with union().'}},{i:'gauge',t:{fr:'Score',en:'Score'},s:{fr:'Pondération par gravité',en:'Severity-weighted'},d:{fr:'Chaque anomalie retire des points selon sa gravité : 2 pour une gravité élevée, 1 pour une moyenne, avec un plancher à 0.',en:'Each finding costs points by severity: 2 for high, 1 for medium, with a floor at 0.'}},{i:'sheet',t:{fr:'Rapport',en:'Report'},s:{fr:'Excel horodaté dans OneDrive',en:'Timestamped Excel in OneDrive'},d:{fr:'Un modèle Excel est copié et horodaté, rempli avec le score et les anomalies, puis la Power App reçoit le score et le lien du rapport.',en:'An Excel template is copied, timestamped and filled with the score and findings; the app then gets the score and the report link back.'}}];
+const route=document.getElementById('route'),rail=document.getElementById('rail'),fill=document.getElementById('fill'),token=document.getElementById('token');
+route.style.gridTemplateColumns=matchMedia("(max-width:720px)").matches?"":`repeat(${S.length},minmax(0,1fr))`;
+route.insertAdjacentHTML('beforeend',S.map((x,k)=>`<button class="stn" type="button" data-k="${k}"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ic[x.i]}</svg></span><span class="txt"><b></b><small></small></span></button>`).join(''));
+const st=[...route.querySelectorAll('.stn')];
+let act=0,playing=!reduce,timer=null,inView=false;
+function centers(){const r=route.getBoundingClientRect();return st.map(b=>{const d=b.querySelector('.dot').getBoundingClientRect();return{x:d.left+d.width/2-r.left,y:d.top+d.height/2-r.top}})}
+function layout(){const c=centers(),a=c[0],z=c[c.length-1],hor=Math.abs(z.x-a.x)>Math.abs(z.y-a.y),p=c[act];
+if(hor){rail.style.cssText=`left:${a.x}px;top:${a.y-1.5}px;width:${z.x-a.x}px;height:3px`;fill.style.cssText=`left:${a.x}px;top:${a.y-1.5}px;width:${p.x-a.x}px;height:3px`}
+else{rail.style.cssText=`left:${a.x-1.5}px;top:${a.y}px;height:${z.y-a.y}px;width:3px`;fill.style.cssText=`left:${a.x-1.5}px;top:${a.y}px;height:${p.y-a.y}px;width:3px`}
+token.style.left=p.x+'px';token.style.top=p.y+'px'}
+function show(k){act=(k+S.length)%S.length;st.forEach((b,i)=>{b.classList.toggle('act',i===act);b.classList.toggle('done',i<act);b.setAttribute('aria-current',i===act?'step':'false')});
+document.getElementById('capN').textContent=act+1;document.getElementById('capT').textContent=S[act].t[lang];document.getElementById('capD').textContent=S[act].d[lang];layout()}
+function texts(){st.forEach((b,i)=>{b.querySelector('b').textContent=S[i].t[lang];b.querySelector('small').textContent=S[i].s[lang]});show(act)}
+function loop(){clearInterval(timer);if(playing&&inView)timer=setInterval(()=>show(act+1),3200)}
+const playBtn=document.getElementById('play');
+function playLabel(){playBtn.textContent=playing?(lang==='en'?'Pause':'Pause'):(lang==='en'?'Play':'Lecture')}
+st.forEach((b,i)=>b.addEventListener('click',()=>{show(i);playing=false;playLabel();loop()}));
+document.getElementById('prev').addEventListener('click',()=>{show(act-1);playing=false;playLabel();loop()});
+document.getElementById('next').addEventListener('click',()=>{show(act+1);playing=false;playLabel();loop()});
+playBtn.addEventListener('click',()=>{playing=!playing;playLabel();loop()});
+new ResizeObserver(layout).observe(route);
+new IntersectionObserver(es=>{for(const e of es){inView=e.isIntersecting;loop()}},{threshold:.3}).observe(route);
+const statics=[...document.querySelectorAll('[data-en]')];statics.forEach(el=>{el.dataset.fr=el.innerHTML});
+function applyLang(){root.lang=lang;statics.forEach(el=>{el.innerHTML=lang==='en'?el.dataset.en:el.dataset.fr});const lb=document.getElementById('langBtn');lb.textContent=lang==='en'?'FR':'EN';lb.setAttribute('aria-label',lang==='en'?'Passer en français':'Switch to English');texts();playLabel();applyMode()}
+document.getElementById('langBtn').addEventListener('click',()=>{lang=lang==='en'?'fr':'en';try{localStorage.setItem('om-lang',lang)}catch(e){}applyLang()});
+const sun='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon='<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+function applyMode(){const light=root.dataset.mode==='light';document.getElementById('modeIco').innerHTML=light?moon:sun;document.getElementById('modeBtn').setAttribute('aria-label',light?(lang==='en'?'Switch to dark mode':'Passer en mode sombre'):(lang==='en'?'Switch to light mode':'Passer en mode clair'))}
+document.getElementById('modeBtn').addEventListener('click',()=>{root.dataset.mode=root.dataset.mode==='light'?'dark':'light';try{localStorage.setItem('om-mode',root.dataset.mode)}catch(e){}applyMode()});
+root.classList.add('js');
+const io=new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}},{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+if(lang==='en')applyLang();else{texts();playLabel();applyMode()}
+}
+</script>
+</body>
+</html>
