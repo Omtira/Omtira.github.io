@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assistant IA Dynamics 365</title>
+<meta name="description" content="Étude de cas : un assistant IA intégré aux formulaires Dynamics 365, construit avec un composant PCF, Power Automate, Copilot Studio, Dataverse et Power BI.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Assistant IA intégré à Dynamics 365 · Othmen MTIRA">
+<meta property="og:description" content="PCF, Power Automate, Copilot Studio, Dataverse et Power BI : architecture, fonctionnalités et leçons techniques.">
+<meta property="og:url" content="https://omtira.github.io/assistant-ia.html">
+<meta property="og:image" content="https://omtira.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://omtira.github.io/assistant-ia.html">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%231a0f1f%22/%3E%3Ctext%20x%3D%228%22%20y%3D%2243%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-weight%3D%22700%22%20font-size%3D%2230%22%20fill%3D%22%23fff%22%3EOM%3C/text%3E%3Ccircle%20cx%3D%2256%22%20cy%3D%2240%22%20r%3D%224%22%20fill%3D%22%23ff8fa3%22/%3E%3C/svg%3E">
+<script>try{var m=localStorage.getItem('om-mode');if(m)document.documentElement.dataset.mode=m;var l=localStorage.getItem('om-lang');if(l)document.documentElement.dataset.lang=l}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE a technical case study read by recruiters and leads: precise, calm
+   IDEA the request's journey through the platform, like a metro line with stations
+   PICTURE a six-station route with a token travelling from the form to the AI and back
+   COLOUR plum-black ground, white ink, rose accent, dusk support (same as the portfolio)
+   TYPE Inter Tight 300 very large + Inter
+   LAYOUT laptop: title, then the route full width with its caption; phone: vertical route */
+:root{color-scheme:dark;--bg:#1a0f1f;--bg2:#24152b;--card:#2c1b34;--line:#45304f;--ink:#ffffff;--soft:#d9cde0;--mute:#b4a3c1;--rose:#ff8fa3;--dusk:#8f7aa8;--on:#1a0f1f}
+:root[data-mode=light]{color-scheme:light;--bg:#ffffff;--bg2:#f7eff9;--card:#f3e8f6;--line:#e2d0e8;--ink:#1a0f1f;--soft:#45354f;--mute:#695774;--rose:#c2375a;--dusk:#b9a6cc;--on:#ffffff}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif;overflow-x:clip}
+a{color:var(--rose)}
+a:focus-visible,button:focus-visible,.stn:focus-visible{outline:2px solid var(--rose);outline-offset:3px}
+.wrap{max-width:1240px;margin:0 auto}
+.band{padding-block:clamp(36px,5vw,72px);padding-left:max(5vw,16px);padding-right:max(5vw,16px)}
+.alt{background:var(--bg2)}
+h1,h2,h3{font-family:"Inter Tight",Inter,sans-serif;margin:0;text-wrap:balance}
+h1{font-weight:300;font-size:clamp(40px,7vw,84px);line-height:1;letter-spacing:-.03em}
+h2{font-weight:500;font-size:clamp(28px,3.6vw,42px);line-height:1.08;letter-spacing:-.02em;margin-bottom:24px}
+h3{font-weight:600;font-size:19px;line-height:1.3}
+p{margin:0}
+.lead{font-size:18px;color:var(--soft);max-width:66ch}
+nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:16px;padding:12px max(5vw,16px)}
+.back{color:var(--soft);text-decoration:none;font-size:15px;display:inline-flex;align-items:center;gap:8px;min-height:44px}
+.back:hover{color:var(--ink)}
+.logo{font-family:"Inter Tight";font-weight:600;font-size:22px;color:var(--ink);text-decoration:none}
+.logo b{color:var(--rose)}
+.tools{margin-left:auto;display:flex;gap:8px}
+.tg{min-width:44px;height:40px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);font:600 14px Inter,sans-serif;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.tg svg{width:18px;height:18px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-size:13px;padding:4px 10px;border-radius:999px;background:var(--card);color:var(--soft);border:1px solid var(--line)}
+.kicker{color:var(--rose);font-weight:600;font-size:15px;margin-bottom:14px}
+.hero .lead{margin-top:20px}
+.hero .chips{margin-top:22px}
+.figs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:32px}
+.figs div{background:var(--bg);padding:16px 18px}
+.figs strong{display:block;font-family:"Inter Tight";font-weight:300;font-size:clamp(34px,4vw,48px);line-height:1}
+.figs span{font-size:14px;color:var(--mute)}
+.route{position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-top:8px;padding-top:4px}
+.rail,.fill{position:absolute;background:var(--line);height:3px;border-radius:3px;z-index:0}
+.fill{background:var(--rose);transition:width .7s ease,height .7s ease}
+.token{position:absolute;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;border:2px solid var(--rose);box-shadow:0 0 22px color-mix(in srgb,var(--rose) 45%,transparent);z-index:2;pointer-events:none;transition:left .7s ease,top .7s ease}
+.stn .txt{display:flex;flex-direction:column;align-items:center;gap:2px}
+.stn{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;cursor:pointer;padding:6px 4px 12px;border-radius:12px;background:transparent;border:0;color:inherit;font:inherit}
+.dot{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--bg2);border:2px solid var(--line);color:var(--mute);transition:all .4s}
+.dot svg{width:24px;height:24px}
+.stn b{font-family:"Inter Tight";font-weight:600;font-size:16px;line-height:1.25}
+.stn small{font-size:13px;color:var(--mute);line-height:1.3}
+.stn.done .dot{border-color:var(--rose);color:var(--rose)}
+.stn.act .dot{background:var(--rose);border-color:var(--rose);color:var(--on);transform:scale(1.12)}
+.cap{margin-top:18px;background:var(--card);border-radius:14px;padding:20px 22px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 18px;align-items:start;min-height:112px}
+.cap .num{font-family:"Inter Tight";font-weight:300;font-size:48px;line-height:1;color:var(--rose)}
+.cap h3{margin-bottom:4px}
+.cap p{color:var(--soft)}
+.side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.side div{border:1px dashed var(--line);border-radius:12px;padding:14px 16px;font-size:15px;color:var(--soft)}
+.side b{color:var(--ink)}
+.ctl{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.ctl button{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);font:600 14px Inter,sans-serif;cursor:pointer}
+.ctl button:hover{border-color:var(--rose)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.card{background:var(--card);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:10px;transition:transform .25s}
+.card:hover{transform:translateY(-4px)}
+.card .n{font-family:"Inter Tight";font-weight:300;font-size:38px;line-height:1;color:var(--rose)}
+.card p,.card li{color:var(--soft);font-size:15px}
+.card ul{margin:0;padding-left:18px;display:grid;gap:5px}
+.tl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.lesson{border-top:2px solid var(--rose);padding-top:14px;display:flex;flex-direction:column;gap:8px}
+.lesson p{color:var(--soft);font-size:15px}
+code{font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:2px 6px;overflow-wrap:anywhere}
+.cta{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;min-height:46px;padding:0 22px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid var(--rose)}
+.btn.main{background:var(--rose);color:var(--on)}
+.btn.ghost{color:var(--ink);border-color:var(--line)}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+footer{padding:24px max(5vw,16px);border-top:1px solid var(--line);color:var(--mute);font-size:14px}
+.js .rv{opacity:0;transform:translateY(22px);transition:opacity .7s,transform .7s}
+.js .rv.in{opacity:1;transform:none}
+@media(max-width:900px){.figs{grid-template-columns:repeat(3,minmax(0,1fr))}.tl{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:720px){
+.route{grid-template-columns:minmax(0,1fr);gap:6px;padding-left:4px}
+.stn{flex-direction:row;text-align:left;align-items:center;gap:14px;padding:8px 4px}
+.stn .txt{align-items:flex-start}
+.grid2,.side{grid-template-columns:minmax(0,1fr)}
+.figs{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cap{grid-template-columns:minmax(0,1fr)}
+}
+@media(prefers-reduced-motion:reduce){.token,.fill{transition:none}.js .rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+<a class="back" href="index.html#projets"><span aria-hidden="true">←</span> <span data-en="Back to portfolio">Retour au portfolio</span></a>
+<div class="tools"><button class="tg" id="langBtn" type="button" aria-label="Switch to English">EN</button><button class="tg" id="modeBtn" type="button" aria-label="Passer en mode clair"><svg id="modeIco" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"></svg></button></div>
+</div></nav>
+
+<header class="band hero"><div class="wrap">
+<p class="kicker" data-en="Case study · Side project">Étude de cas · Projet personnel</p>
+<h1 data-en="An AI assistant built into Dynamics 365">Un assistant IA intégré à Dynamics 365</h1>
+<p class="lead" data-en="A complete proof of concept that brings generative AI into Dynamics 365 forms: users summarize a case, create a record from free-form text, get next-step suggestions and find related cases without leaving the CRM.">Un POC complet qui apporte l'IA générative dans les formulaires Dynamics 365 : l'utilisateur résume un dossier, crée un enregistrement à partir d'un texte libre, obtient des suggestions d'actions et retrouve les dossiers liés, sans quitter le CRM.</p>
+<div class="chips"><span>PCF</span><span>Power Automate</span><span>Copilot Studio</span><span>Dataverse</span><span>Outlook</span><span>Power BI</span></div>
+<div class="figs">
+<div><strong>4</strong><span data-en="AI capabilities">capacités IA</span></div>
+<div><strong>1</strong><span data-en="PCF control, reused 4 times">composant PCF, réutilisé 4 fois</span></div>
+<div><strong>4</strong><span data-en="Power Automate flows">flows Power Automate</span></div>
+<div><strong>3</strong><span data-en="custom Dataverse tables">tables Dataverse dédiées</span></div>
+<div><strong>6</strong><span data-en="Power BI visuals">visuels Power BI</span></div>
+</div>
+</div></header>
+
+<section class="band alt"><div class="wrap">
+<h2 class="rv" data-en="The journey of a request">Le trajet d'une requête</h2>
+<div class="route rv" id="route">
+<span class="rail" id="rail"></span><span class="fill" id="fill"></span><span class="token" id="token" aria-hidden="true"></span>
+</div>
+<div class="cap" id="cap" aria-live="polite"><span class="num" id="capN">1</span><div><h3 id="capT"></h3><p id="capD"></p></div></div>
+<div class="ctl"><button type="button" id="prev" data-en="Previous">Précédent</button><button type="button" id="play" data-en="Pause">Pause</button><button type="button" id="next" data-en="Next">Suivant</button></div>
+<div class="side">
+<div data-en="&lt;b&gt;In parallel, Outlook:&lt;/b&gt; the suggestions capability also creates a ready-to-edit email draft in the user's mailbox."><b>En parallèle, Outlook :</b> la capacité de suggestions crée aussi un brouillon d'email prêt à compléter dans la boîte de l'utilisateur.</div>
+<div data-en="&lt;b&gt;Downstream, Power BI:&lt;/b&gt; a dashboard reads the AI log and the cases to track usage, retries, feedback and workload."><b>En aval, Power BI :</b> un tableau de bord lit le Journal IA et les dossiers pour suivre l'usage, les retries, le feedback et l'activité.</div>
+</div>
+</div></section>
+
+<section class="band"><div class="wrap">
+<h2 class="rv" data-en="Four capabilities, one component">Quatre capacités, un seul composant</h2>
+<div class="grid2">
+<article class="card rv"><span class="n">1</span><h3 data-en="Smart case summary">Résumé intelligent d'un dossier</h3><p data-en="The agent summarizes a case from its Dataverse data, with status and priority shown as readable labels rather than raw option values.">L'agent résume un dossier à partir de ses données Dataverse, avec le statut et la priorité affichés en libellés lisibles plutôt qu'en valeurs brutes.</p></article>
+<article class="card rv"><span class="n">2</span><h3 data-en="Assisted record creation">Création assistée</h3><p data-en="The user types or dictates free-form text. The flow extracts title, account, status, priority and description as JSON, creates the record and the PCF opens it automatically.">L'utilisateur tape ou dicte un texte libre. Le flow en extrait titre, compte, statut, priorité et description en JSON, crée l'enregistrement, et le PCF l'ouvre automatiquement.</p></article>
+<article class="card rv"><span class="n">3</span><h3 data-en="Next-step suggestions">Suggestions d'actions</h3><p data-en="One answer, three parts: the recommended next step, a client email draft created in Outlook, and a suggested status and priority.">Une réponse en trois volets : la prochaine étape recommandée, un brouillon d'email client créé dans Outlook, et une suggestion de statut et de priorité.</p></article>
+<article class="card rv"><span class="n">4</span><h3 data-en="Related cases">Dossiers liés</h3><p data-en="The agent compares the case with the account's other cases, explains why they are related and suggests the right contact from the account, without making anyone up.">L'agent compare le dossier aux autres dossiers du même compte, justifie les liens et suggère le bon contact du compte, sans inventer personne.</p></article>
+</div>
+</div></section>
+
+<section class="band alt"><div class="wrap">
+<h2 class="rv" data-en="Built to be reliable and governed">Pensé pour être fiable et gouverné</h2>
+<div class="grid2">
+<article class="card rv"><h3 data-en="Automatic retry">Retry automatique</h3><p data-en="When the agent escalates instead of answering, a known Copilot Studio behavior, the flow calls it a second time before replying. Users get an answer instead of an error.">Quand l'agent escalade au lieu de répondre, un comportement connu de Copilot Studio, le flow le rappelle une seconde fois avant de répondre. L'utilisateur obtient une réponse plutôt qu'une erreur.</p></article>
+<article class="card rv"><h3 data-en="AI call log">Journal des appels IA</h3><p data-en="Every call is stored in Dataverse: question, answer, capability, related case, date and whether a retry fired. The AI's behavior becomes measurable.">Chaque appel est enregistré dans Dataverse : question, réponse, capacité, dossier lié, date et déclenchement du retry. Le comportement de l'IA devient mesurable.</p></article>
+<article class="card rv"><h3 data-en="User feedback">Feedback utilisateur</h3><p data-en="A thumbs up or down under each answer, written straight to the log by the PCF through its native Web API, with no form hacks.">Un pouce haut ou bas sous chaque réponse, écrit directement dans le journal par le PCF via son accès Web API natif, sans contournement du formulaire.</p></article>
+<article class="card rv"><h3 data-en="Prompts managed as data">Prompts gérés comme des données</h3><p data-en="The four prompts live in a Dataverse table with placeholders filled at runtime. Tuning a prompt no longer means editing a flow.">Les quatre prompts sont stockés dans une table Dataverse, avec des marqueurs remplacés à l'exécution. Ajuster un prompt ne demande plus de modifier un flow.</p></article>
+</div>
+</div></section>
+
+<section class="band"><div class="wrap">
+<h2 class="rv" data-en="What I learned along the way">Ce que j'en retiens</h2>
+<div class="tl">
+<div class="lesson rv"><h3 data-en="Lookups in “Add a new row”">Les lookups dans « Add a new row »</h3><p data-en="Use a custom value with the plural entity set name and the GUID in parentheses:">Passer par une valeur personnalisée avec le nom du jeu d'entités au pluriel et le GUID entre parenthèses :</p><code>oth_dossiers(@{triggerBody()?['entityId']})</code></div>
+<div class="lesson rv"><h3 data-en="Text from a list: Select, not a loop">Du texte depuis une liste : Select, pas une boucle</h3><p data-en="A Select action turns the cases into text that join() can use; an Apply to each output cannot be joined.">Une action Select transforme les dossiers en texte exploitable par join() ; la sortie d'un Apply to each ne peut pas l'être.</p></div>
+<div class="lesson rv"><h3 data-en="Case-insensitive matching">Comparaison insensible à la casse</h3><p data-en="Resolving an account with Filter array and toLower() proved more reliable than tolower() inside an OData filter, which raised syntax errors.">Retrouver un compte avec Filter array et toLower() s'est révélé plus fiable qu'un tolower() dans un filtre OData, qui provoquait des erreurs de syntaxe.</p></div>
+<div class="lesson rv"><h3 data-en="PCF property types matter">Le type des propriétés PCF compte</h3><p data-en="A flow URL does not fit in a single-line text property (100-character limit); a multi-line property does.">Une URL de flow ne tient pas dans une propriété texte sur une ligne (limite de 100 caractères) ; une propriété multiligne, si.</p></div>
+<div class="lesson rv"><h3 data-en="Mind the column types">Attention aux types de colonnes</h3><p data-en="A Yes/No column expects a Boolean, not the text “Yes”: a small mismatch that breaks the mapping.">Une colonne Oui/Non attend un booléen, pas le texte « Oui » : un petit écart qui casse le mapping.</p></div>
+<div class="lesson rv"><h3 data-en="Readable choice values">Des choix lisibles</h3><p data-en="The FormattedValue annotation gives the label of a Choice column directly:">L'annotation FormattedValue donne directement le libellé d'une colonne Choix :</p><code>item()?['oth_statut@OData.Community.Display.V1.FormattedValue']</code></div>
+</div>
+</div></section>
+
+<section class="band alt"><div class="wrap cta">
+<div><h2 style="margin-bottom:8px" data-en="Want a walkthrough?">Envie d'une démonstration ?</h2><p class="lead" data-en="I am happy to walk you through the solution live.">Je présente volontiers la solution en direct.</p></div>
+<div class="btns"><a class="btn main" href="index.html#contact" data-en="Contact me">Me contacter</a><a class="btn ghost" href="index.html#projets" data-en="Other projects">Autres projets</a></div>
+</div></section>
+
+<footer><div class="wrap"><span data-en="© 2026 Othmen MTIRA · Dynamics 365 CE &amp; Power Platform Consultant · Paris">© 2026 Othmen MTIRA · Consultant Dynamics 365 CE &amp; Power Platform · Paris</span></div></footer>
+
+<script>
+{
+const root=document.documentElement;let lang=root.dataset.lang==='en'?'en':'fr';
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const ic={
+form:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+flow:'<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H14a4 4 0 0 1 4 4v5.5"/>',
+ai:'<path d="M12 3l1.8 4.6L18.5 9l-4.7 1.6L12 15l-1.8-4.4L5.5 9l4.7-1.4z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
+retry:'<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>',
+log:'<ellipse cx="12" cy="5.5" rx="7" ry="2.5"/><path d="M5 5.5v13c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-13M5 12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5"/>',
+back:'<path d="M7 10v11M7 10l4-7c1.5 0 2.5 1 2.5 2.5V9h5a2 2 0 0 1 2 2.3l-1.2 7A2 2 0 0 1 17.3 20H7"/>'};
+const S=[
+{i:'form',t:{fr:"Formulaire Dynamics 365",en:"Dynamics 365 form"},s:{fr:"Composant PCF",en:"PCF control"},d:{fr:"L'utilisateur lance une capacité depuis le formulaire. Le composant PCF envoie le contexte de l'enregistrement au flow.",en:"The user launches a capability from the form. The PCF control sends the record's context to the flow."}},
+{i:'flow',t:{fr:"Power Automate",en:"Power Automate"},s:{fr:"Flow déclenché par HTTP",en:"HTTP-triggered flow"},d:{fr:"Le flow lit l'enregistrement dans Dataverse, récupère le prompt de la capacité dans la table Prompt IA et y injecte les données : titre, statut, priorité, description.",en:"The flow reads the record from Dataverse, fetches the capability's prompt from the AI Prompt table and fills in the data: title, status, priority, description."}},
+{i:'ai',t:{fr:"Copilot Studio",en:"Copilot Studio"},s:{fr:"Agent IA",en:"AI agent"},d:{fr:"L'agent reçoit le prompt complet et génère la réponse : un résumé, un JSON de création, des suggestions ou une liste de dossiers liés.",en:"The agent receives the full prompt and generates the answer: a summary, a JSON payload for record creation, suggestions or a list of related cases."}},
+{i:'retry',t:{fr:"Contrôle",en:"Safety net"},s:{fr:"Retry anti-escalade",en:"Anti-escalation retry"},d:{fr:"Si l'agent escalade au lieu de répondre, le flow relance automatiquement un second appel avant de répondre à l'utilisateur.",en:"If the agent escalates instead of answering, the flow automatically retries once before replying to the user."}},
+{i:'log',t:{fr:"Journal IA",en:"AI log"},s:{fr:"Table Dataverse",en:"Dataverse table"},d:{fr:"Chaque appel est tracé : question, réponse, capacité, dossier lié, date et déclenchement éventuel du retry.",en:"Every call is logged: question, answer, capability, related case, date and whether a retry fired."}},
+{i:'back',t:{fr:"Retour au formulaire",en:"Back in the form"},s:{fr:"Réponse et feedback",en:"Answer and feedback"},d:{fr:"La réponse s'affiche dans le PCF. L'utilisateur la note d'un pouce haut ou bas, enregistré directement dans le Journal IA.",en:"The answer appears in the PCF control. The user rates it with a thumbs up or down, saved straight to the AI log."}}];
+const route=document.getElementById('route'),rail=document.getElementById('rail'),fill=document.getElementById('fill'),token=document.getElementById('token');
+route.insertAdjacentHTML('beforeend',S.map((x,k)=>`<button class="stn" type="button" data-k="${k}"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ic[x.i]}</svg></span><span class="txt"><b></b><small></small></span></button>`).join(''));
+const st=[...route.querySelectorAll('.stn')];
+let act=0,playing=!reduce,timer=null,inView=false;
+function centers(){const r=route.getBoundingClientRect();return st.map(b=>{const d=b.querySelector('.dot').getBoundingClientRect();return{x:d.left+d.width/2-r.left,y:d.top+d.height/2-r.top}})}
+function layout(){const c=centers(),a=c[0],z=c[c.length-1],hor=Math.abs(z.x-a.x)>Math.abs(z.y-a.y),p=c[act];
+if(hor){rail.style.cssText=`left:${a.x}px;top:${a.y-1.5}px;width:${z.x-a.x}px;height:3px`;fill.style.cssText=`left:${a.x}px;top:${a.y-1.5}px;width:${p.x-a.x}px;height:3px`}
+else{rail.style.cssText=`left:${a.x-1.5}px;top:${a.y}px;height:${z.y-a.y}px;width:3px`;fill.style.cssText=`left:${a.x-1.5}px;top:${a.y}px;height:${p.y-a.y}px;width:3px`}
+token.style.left=p.x+'px';token.style.top=p.y+'px'}
+function show(k){act=(k+S.length)%S.length;st.forEach((b,i)=>{b.classList.toggle('act',i===act);b.classList.toggle('done',i<act);b.setAttribute('aria-current',i===act?'step':'false')});
+document.getElementById('capN').textContent=act+1;document.getElementById('capT').textContent=S[act].t[lang];document.getElementById('capD').textContent=S[act].d[lang];layout()}
+function texts(){st.forEach((b,i)=>{b.querySelector('b').textContent=S[i].t[lang];b.querySelector('small').textContent=S[i].s[lang]});show(act)}
+function loop(){clearInterval(timer);if(playing&&inView)timer=setInterval(()=>show(act+1),3200)}
+const playBtn=document.getElementById('play');
+function playLabel(){playBtn.textContent=playing?(lang==='en'?'Pause':'Pause'):(lang==='en'?'Play':'Lecture')}
+st.forEach((b,i)=>b.addEventListener('click',()=>{show(i);playing=false;playLabel();loop()}));
+document.getElementById('prev').addEventListener('click',()=>{show(act-1);playing=false;playLabel();loop()});
+document.getElementById('next').addEventListener('click',()=>{show(act+1);playing=false;playLabel();loop()});
+playBtn.addEventListener('click',()=>{playing=!playing;playLabel();loop()});
+new ResizeObserver(layout).observe(route);
+new IntersectionObserver(es=>{for(const e of es){inView=e.isIntersecting;loop()}},{threshold:.3}).observe(route);
+const statics=[...document.querySelectorAll('[data-en]')];statics.forEach(el=>{el.dataset.fr=el.innerHTML});
+function applyLang(){root.lang=lang;statics.forEach(el=>{el.innerHTML=lang==='en'?el.dataset.en:el.dataset.fr});const lb=document.getElementById('langBtn');lb.textContent=lang==='en'?'FR':'EN';lb.setAttribute('aria-label',lang==='en'?'Passer en français':'Switch to English');texts();playLabel();applyMode()}
+document.getElementById('langBtn').addEventListener('click',()=>{lang=lang==='en'?'fr':'en';try{localStorage.setItem('om-lang',lang)}catch(e){}applyLang()});
+const sun='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon='<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+function applyMode(){const light=root.dataset.mode==='light';document.getElementById('modeIco').innerHTML=light?moon:sun;document.getElementById('modeBtn').setAttribute('aria-label',light?(lang==='en'?'Switch to dark mode':'Passer en mode sombre'):(lang==='en'?'Switch to light mode':'Passer en mode clair'))}
+document.getElementById('modeBtn').addEventListener('click',()=>{root.dataset.mode=root.dataset.mode==='light'?'dark':'light';try{localStorage.setItem('om-mode',root.dataset.mode)}catch(e){}applyMode()});
+root.classList.add('js');
+const io=new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}},{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+if(lang==='en')applyLang();else{texts();playLabel();applyMode()}
+}
+</script>
+</body>
+</html>
