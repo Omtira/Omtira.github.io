@@ -151,23 +151,21 @@ footer{padding:24px max(5vw,16px);border-top:1px solid var(--line);color:var(--m
 .hero .wrap{position:relative}
 .rot{font-size:clamp(16px,1.8vw,19px);color:var(--soft);margin-top:10px;min-height:1.6em}
 .rot b{color:var(--ink);font-weight:600}
-.caret{display:inline-block;width:2px;height:1.1em;background:var(--rose);vertical-align:-3px;margin-left:3px;animation:blink 1s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
+#typed{display:inline-block;transition:opacity .35s ease,transform .35s ease}
+#typed.out{opacity:0;transform:translateY(4px)}
 .portrait{isolation:isolate}
 .portrait::after{content:"";position:absolute;inset:0;border-radius:18px;padding:2px;background:conic-gradient(from var(--a,0deg),var(--rose),transparent 30%,var(--dusk) 60%,transparent 80%,var(--rose));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spin 8s linear infinite}
 @property --a{syntax:"<angle>";inherits:false;initial-value:0deg}
 @keyframes spin{to{--a:360deg}}
 .portrait img{transition:transform .8s ease}
 .portrait:hover img{transform:scale(1.04)}
-.tag i{animation:pulse 2s ease-out infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--rose) 70%,transparent)}100%{box-shadow:0 0 0 10px transparent}}
 .marquee:hover .track{animation-play-state:paused}
 .step,.proj,.box,.cert{transition:transform .25s ease,border-color .25s ease,background .25s ease}
 .step:hover,.proj:hover,.box:hover{transform:translateY(-5px);background:color-mix(in srgb,var(--card) 80%,var(--dusk))}
 .cert{position:relative;overflow:hidden}
 .cert:hover{transform:translateY(-4px);border-color:var(--rose)}
-.cert::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.12),transparent);transform:skewX(-20deg);transition:left .6s ease}
-.cert:hover::after{left:120%}
+.cert::after{content:"";position:absolute;top:0;left:0;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.12),transparent);transform:translateX(-150%) skewX(-20deg);transition:transform .6s ease}
+.cert:hover::after{transform:translateX(300%) skewX(-20deg)}
 .chips span{transition:background .2s,color .2s,border-color .2s}
 .chips span:hover{background:var(--rose);color:var(--on);border-color:var(--rose)}
 .tl{position:relative}
@@ -181,7 +179,7 @@ footer{padding:24px max(5vw,16px);border-top:1px solid var(--line);color:var(--m
 .top{position:fixed;right:18px;bottom:18px;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:20px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;z-index:6}
 .top.show{opacity:1;pointer-events:auto}
 .top:hover{transform:translateY(-3px);border-color:var(--rose)}
-@media(prefers-reduced-motion:reduce){.js .reveal,.js .proj .bub,.js .proj .row,.js .proj pre{opacity:1;transform:none;transition:none}.portrait::after,.caret,.tag i{animation:none}.glow{display:none}}
+@media(prefers-reduced-motion:reduce){.js .reveal,.js .proj .bub,.js .proj .row,.js .proj pre{opacity:1;transform:none;transition:none}.portrait::after{animation:none}.glow{display:none}}
 .band.rule{border-top:1px solid var(--line)}
 .tips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
 .tip{background:var(--card);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px;transition:transform .25s ease}
@@ -207,7 +205,7 @@ footer{padding:24px max(5vw,16px);border-top:1px solid var(--line);color:var(--m
 <header class="band hero" id="top"><div class="glow" id="glow"></div><div class="wrap">
 <h1 class="name">Othmen MTIRA</h1>
 <p class="role" data-en="Microsoft Dynamics 365 CE &amp; Power Platform Technical Consultant">Consultant Technique Microsoft Dynamics 365 CE &amp; Power Platform</p>
-<p class="rot" aria-live="off"><span data-en="Specializing in">Spécialiste</span> <b id="typed">plugins C# et JavaScript</b><span class="caret"></span></p>
+<p class="rot" aria-live="off"><span data-en="Specializing in">Spécialiste</span> <b id="typed">plugins C# et JavaScript</b></p>
 <div class="herogrid">
 <div class="intro">
 <p class="lead" data-en="I help organizations design, build and scale their CRM solutions, on-premises and in the cloud: C# plugins, JavaScript, Power Automate, integrations and migrations, all the way through go-live.">J'accompagne les entreprises dans la conception, le développement et l'évolution de leurs solutions CRM, de l'on-premise au cloud : plugins C#, JavaScript, Power Automate, intégrations et migrations, jusqu'à la mise en production.</p>
@@ -406,7 +404,7 @@ const nums=document.querySelectorAll('[data-n]');
 const cio=new IntersectionObserver(es=>{for(const e of es){if(!e.isIntersecting)continue;const el=e.target,n=+el.dataset.n;cio.unobserve(el);if(reduce)continue;const t0=performance.now(),d=1400;const step=t=>{const suf=(lang==='en'?el.dataset.sEn:el.dataset.s)||'';const q=Math.min(1,(t-t0)/d),v=Math.round(n*(1-(1-q)**3));el.textContent=v+suf;if(q<1)requestAnimationFrame(step)};requestAnimationFrame(step)}},{threshold:.6});
 nums.forEach(x=>cio.observe(x));
 const typed=document.getElementById('typed');
-if(!reduce){let w=0,c=words[lang][0].length,del=true,cl=lang;setTimeout(function loop(){if(cl!==lang){cl=lang;w=0;c=words[lang][0].length;del=true;typed.textContent=words[lang][0];setTimeout(loop,2200);return}const ws=words[lang];if(del){c--;typed.textContent=ws[w].slice(0,c);if(c<=0){del=false;w=(w+1)%ws.length}setTimeout(loop,c<=0?300:35)}else{c++;typed.textContent=ws[w].slice(0,c);if(c>=ws[w].length){del=true;setTimeout(loop,2200)}else setTimeout(loop,60)}},2200)}
+if(!reduce){let w=0,cl=lang;setInterval(()=>{if(cl!==lang){cl=lang;w=0;return}typed.classList.add('out');setTimeout(()=>{w=(w+1)%words[lang].length;typed.textContent=words[lang][w];typed.classList.remove('out')},350)},2800)}
 const bar=document.getElementById('bar'),tl=document.querySelector('.tl'),top=document.getElementById('toTop');
 const secs=[...document.querySelectorAll('section[id],header[id]')],links=[...document.querySelectorAll('.links a')];
 function onScroll(){const h=document.documentElement,y=h.scrollTop,max=h.scrollHeight-h.clientHeight;bar.style.width=(max>0?y/max*100:0)+'%';top.classList.toggle('show',y>700);

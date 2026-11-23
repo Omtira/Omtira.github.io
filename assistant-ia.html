@@ -61,7 +61,7 @@ nav .wrap{display:flex;align-items:center;gap:16px;padding:12px max(5vw,16px)}
 .route{position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-top:8px;padding-top:4px}
 .rail,.fill{position:absolute;background:var(--line);height:3px;border-radius:3px;z-index:0}
 .fill{background:var(--rose);transition:width .7s ease,height .7s ease}
-.token{position:absolute;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;border:2px solid var(--rose);box-shadow:0 0 22px color-mix(in srgb,var(--rose) 45%,transparent);z-index:2;pointer-events:none;transition:left .7s ease,top .7s ease}
+.token{position:absolute;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;border:2px solid var(--rose);box-shadow:0 0 22px color-mix(in srgb,var(--rose) 45%,transparent);z-index:2;pointer-events:none;left:0;top:0;transition:transform .7s ease}
 .stn .txt{display:flex;flex-direction:column;align-items:center;gap:2px}
 .stn{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;cursor:pointer;padding:6px 4px 12px;border-radius:12px;background:transparent;border:0;color:inherit;font:inherit}
 .dot{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--bg2);border:2px solid var(--line);color:var(--mute);transition:all .4s}
@@ -208,7 +208,7 @@ function centers(){const r=route.getBoundingClientRect();return st.map(b=>{const
 function layout(){const c=centers(),a=c[0],z=c[c.length-1],hor=Math.abs(z.x-a.x)>Math.abs(z.y-a.y),p=c[act];
 if(hor){rail.style.cssText=`left:${a.x}px;top:${a.y-1.5}px;width:${z.x-a.x}px;height:3px`;fill.style.cssText=`left:${a.x}px;top:${a.y-1.5}px;width:${p.x-a.x}px;height:3px`}
 else{rail.style.cssText=`left:${a.x-1.5}px;top:${a.y}px;height:${z.y-a.y}px;width:3px`;fill.style.cssText=`left:${a.x-1.5}px;top:${a.y}px;height:${p.y-a.y}px;width:3px`}
-token.style.left=p.x+'px';token.style.top=p.y+'px'}
+token.style.transform='translate('+p.x+'px,'+p.y+'px)'}
 function show(k){act=(k+S.length)%S.length;st.forEach((b,i)=>{b.classList.toggle('act',i===act);b.classList.toggle('done',i<act);b.setAttribute('aria-current',i===act?'step':'false')});
 document.getElementById('capN').textContent=act+1;document.getElementById('capT').textContent=S[act].t[lang];document.getElementById('capD').textContent=S[act].d[lang];layout()}
 function texts(){st.forEach((b,i)=>{b.querySelector('b').textContent=S[i].t[lang];b.querySelector('small').textContent=S[i].s[lang]});show(act)}
